@@ -1,0 +1,37 @@
+import { createApp } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router'
+import './style.css'
+import App from './App.vue'
+import Home from './pages/Home.vue'
+import Shop from './pages/Shop.vue'
+import About from './pages/About.vue'
+import Usage from './pages/Usage.vue'
+import Contact from './pages/Contact.vue'
+import Checkout from './pages/Checkout.vue'
+import OrderSuccess from './pages/OrderSuccess.vue'
+
+const routes = [
+  { path: '/', component: Home },
+  { path: '/shop', component: Shop },
+  { path: '/about', component: About },
+  { path: '/usage', component: Usage },
+  { path: '/contact', component: Contact },
+  { path: '/checkout', component: Checkout },
+  { path: '/order-success', name: 'OrderSuccess', component: OrderSuccess },
+]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  }
+})
+
+const app = createApp(App)
+app.use(router)
+app.mount('#app')

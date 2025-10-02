@@ -1,0 +1,180 @@
+<script setup lang="ts">
+import { Users, Award, Leaf, Target } from 'lucide-vue-next'
+
+const values = [
+  {
+    icon: Award,
+    title: 'Kualitas Premium',
+    description: 'Kami hanya mengambil daun nilam terbaik dari perkebunan bersertifikat dengan kontrol kualitas yang ketat.'
+  },
+  {
+    icon: Leaf,
+    title: 'Proses Alami',
+    description: 'Proses pengeringan kami menjaga sifat alami dan kandungan minyak atsiri dari daun.'
+  },
+  {
+    icon: Users,
+    title: 'Fokus Pelanggan',
+    description: 'Kami memahami kebutuhan pelanggan kami dan menyediakan solusi yang disesuaikan untuk berbagai segmen pasar.'
+  },
+  {
+    icon: Target,
+    title: 'Pasokan Andal',
+    description: 'Ketersediaan yang konsisten dan pengiriman tepat waktu untuk mendukung operasi bisnis Anda.'
+  }
+]
+</script>
+
+<template>
+  <div class="bg-cream-50">
+    <!-- Hero Section -->
+    <section class="section-padding bg-gradient-to-br from-brown-700 to-brown-800 text-cream-100">
+      <div class="container-max text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6">Tentang Tansan Nilam</h1>
+        <p class="text-xl text-cream-300 max-w-3xl mx-auto">
+          Mitra terpercaya Anda untuk daun nilam kering premium, menghubungkan pertanian tradisional Indonesia dengan kebutuhan bisnis modern.
+        </p>
+      </div>
+    </section>
+
+    <!-- Story Section -->
+    <section class="section-padding bg-white">
+      <div class="container-max">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="space-y-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-brown-800">Kisah Kami</h2>
+            <div class="space-y-4 text-brown-600 text-lg leading-relaxed">
+              <p>
+                Tansan Nilam lahir dari semangat untuk menghubungkan warisan pertanian Indonesia yang kaya
+                dengan permintaan global akan produk aromaterapi dan minyak atsiri alami berkualitas tinggi.
+              </p>
+              <p>
+                Didirikan di jantung Aceh, kami bekerja langsung dengan petani lokal yang telah membudidayakan
+                nilam selama beberapa generasi. Misi kami adalah melestarikan metode pertanian tradisional sambil
+                memenuhi standar kualitas modern.
+              </p>
+              <p>
+                Apa yang dimulai sebagai operasi lokal kecil telah berkembang menjadi pemasok tepercaya bagi para
+                penggemar aromaterapi, penyuling minyak atsiri, dan produsen produk herbal di seluruh Indonesia
+                dan sekitarnya.
+              </p>
+            </div>
+          </div>
+          <div class="relative">
+            <img
+              src="https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/600x400/875f23/ffffff?text=Perkebunan+Nilam"
+              alt="Perkebunan Nilam"
+              class="rounded-2xl shadow-2xl"
+            />
+            <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-orange-500 rounded-2xl flex items-center justify-center">
+              <div class="text-center text-white">
+                <div class="text-2xl font-bold">5+</div>
+                <div class="text-sm">Tahun</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="section-padding bg-cream-50">
+      <div class="container-max">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold text-brown-800 mb-4">Nilai-Nilai Kami</h2>
+          <p class="text-xl text-brown-600 max-w-3xl mx-auto">
+            Prinsip-prinsip yang memandu semua yang kami lakukan, dari sumber hingga pengiriman.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div
+            v-for="value in values"
+            :key="value.title"
+            class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
+          >
+            <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <component :is="value.icon" class="w-8 h-8 text-white" />
+            </div>
+            <h3 class="text-xl font-semibold text-brown-800 mb-4">{{ value.title }}</h3>
+            <p class="text-brown-600">{{ value.description }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="section-padding bg-white">
+      <div class="container-max">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold text-brown-800 mb-4">Proses Kami</h2>
+          <p class="text-xl text-brown-600">
+            Dari perkebunan hingga ke tangan Anda, memastikan kualitas di setiap langkah.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-darkGreen-500 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">
+              1
+            </div>
+            <h3 class="text-xl font-semibold text-brown-800 mb-4">Panen Cermat</h3>
+            <p class="text-brown-600">
+              Petani mitra kami memanen daun nilam pada waktu yang optimal saat kandungan minyak atsiri paling tinggi.
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">
+              2
+            </div>
+            <h3 class="text-xl font-semibold text-brown-800 mb-4">Pengeringan Ahli</h3>
+            <p class="text-brown-600">
+              Daun dikeringkan menggunakan metode tradisional yang dikombinasikan dengan kontrol kualitas modern untuk mencapai kekeringan 95-98%.
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="w-20 h-20 bg-brown-500 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">
+              3
+            </div>
+            <h3 class="text-xl font-semibold text-brown-800 mb-4">Kemasan Berkualitas</h3>
+            <p class="text-brown-600">
+              Produk akhir dikemas dalam kantong aluminium foil premium untuk menjaga kesegaran dan aroma.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="section-padding bg-cream-50">
+      <div class="container-max">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold text-brown-800 mb-4">Komitmen Kami</h2>
+          <p class="text-xl text-brown-600 max-w-3xl mx-auto">
+            Kami berkomitmen untuk mendukung masyarakat lokal sambil memberikan produk luar biasa kepada pelanggan kami di seluruh dunia.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="bg-white rounded-2xl p-8 shadow-lg">
+            <h3 class="text-2xl font-semibold text-brown-800 mb-4">Mendukung Petani Lokal</h3>
+            <p class="text-brown-600 leading-relaxed">
+              Kami bekerja langsung dengan komunitas petani lokal, memberikan harga yang adil dan dukungan teknis
+              untuk membantu mereka meningkatkan praktik budidaya dan pendapatan mereka.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-2xl p-8 shadow-lg">
+            <h3 class="text-2xl font-semibold text-brown-800 mb-4">Praktik Berkelanjutan</h3>
+            <p class="text-brown-600 leading-relaxed">
+              Mitra pertanian kami menggunakan praktik pertanian berkelanjutan yang melindungi lingkungan
+              sambil memastikan ketersediaan jangka panjang nilam berkualitas tinggi.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>

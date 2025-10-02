@@ -1,0 +1,120 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { CheckCircle, Home } from 'lucide-vue-next'
+
+const route = useRoute()
+const router = useRouter()
+
+const order = computed(() => window.history.state.order)
+
+if (!order.value) {
+  router.replace('/')
+}
+
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0
+  }).format(price)
+}
+
+const copyToClipboard = (text: string) => {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Berhasil disalin!')
+  })
+}
+
+const bankDetails = computed(() => {
+  if (order.value?.payment.type === 'bank_transfer') {
+    const bank = order.value.payment.detail.toLowerCase()
+    if (bank === 'bca') return { prefix: '8808', name: 'BCA' }
+    if (bank === 'mandiri') return { prefix: '8908', name: 'Mandiri' }
+    if (bank === 'bri') return { prefix: '88808', name: 'BRI' }
+  }
+  return { prefix: '8808', name: 'Bank' }
+})
+</script>
+
+<template>
+  <div v-if="order" class="section-padding bg-cream-50 min-h-screen">
+    <div class="container-max">
+      <div class="bg-white p-8 md:p-12 rounded-2xl shadow-lg max-w-4xl mx-auto">
+        <div class="text-center mb-8">
+          <CheckCircle class="w-16 h-16 text-green-500 mx-auto mb-4" />
+          <h1 class="text-3xl font-bold text-brown-800">Pesanan Berhasil Dibuat!</h1>
+          <p class="text-brown-600 mt-2">Terima kasih telah berbelanja di Tansan Nilam. Segera selesaikan pembayaran Anda.</p>
+        </div>
+
+        <!-- Payment Instructions -->
+        <div class="bg-cream-50 p-6 rounded-xl mb-8">
+          <h2 class="text-xl font-bold text-brown-800 mb-4">Instruksi Pembayaran</h2>
+          
+          <!-- Bank Transfer -->
+          <div v-if="order.payment.type === 'bank_transfer'">
+            <p class="text-brown-700 mb-4">Selesaikan pembayaran Anda melalui transfer ke Virtual Account berikut:</p>
+            <div class="bg-white p-4 rounded-lg text-center space-y-2">
+              <p class="text-sm text-brown-600">{{ bankDetails.name }} Virtual Account</p>
+              <p class="text-2xl font-bold text-orange-600 tracking-wider">{{ `${bankDetails.prefix}${order.orderId.slice(-8)}` }}</p>
+              <button @click="copyToClipboard(`${bankDetails.prefix}${order.orderId.slice(-8)}`)" class="text-sm text-orange-500 hover:underline">Salin Nomor</button>
+            </div>
+            <p class="text-sm text-brown-600 mt-4">Total Pembayaran: <strong class="text-brown-800">{{ formatPrice(order.total) }}</strong></p>
+            <p class="text-xs text-gray-500 mt-2">Pembayaran akan terverifikasi secara otomatis dalam beberapa menit.</p>
+          </div>
+
+          <!-- QRIS -->
+          <div v-if="order.payment.type === 'qris'" class="text-center">
+            <p class="text-brown-700 mb-4">Pindai kode QRIS di bawah ini menggunakan aplikasi E-Wallet Anda (GoPay, OVO, Dana, dll).</p>
+            <div class="flex justify-center">
+              <img src="https://img-wrapper.vercel.app/image?url=https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://tansannilam.com/pay" alt="QRIS Code" class="rounded-lg shadow-md" />
+            </div>
+            <p class="text-sm text-brown-600 mt-4">Total Pembayaran: <strong class="text-brown-800">{{ formatPrice(order.total) }}</strong></p>
+            <p class="text-xs text-gray-500 mt-2">Pastikan jumlah yang Anda masukkan sesuai.</p>
+          </div>
+        </div>
+
+        <!-- Order Details -->
+        <div class="border-t border-cream-200 pt-8">
+          <h2 class="text-xl font-bold text-brown-800 mb-4">Detail Pesanan</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+            <div>
+              <p><strong class="text-brown-700">ID Pesanan:</strong> {{ order.orderId }}</p>
+              <p><strong class="text-brown-700">Tanggal:</strong> {{ order.date }}</p>
+            </div>
+            <div class="md:text-right">
+              <p><strong class="text-brown-700">Nama:</strong> {{ order.customer.name }}</p>
+              <p><strong class="text-brown-700">Email:</strong> {{ order.customer.email }}</p>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <h3 class="font-semibold text-brown-700 mb-2">Item yang Dipesan:</h3>
+            <div class="space-y-2">
+              <div v-for="item in order.items" :key="item.id" class="flex justify-between items-center bg-cream-50 p-3 rounded-lg">
+                <div>
+                  <p class="font-semibold">{{ item.name }} ({{ item.size }})</p>
+                  <p class="text-xs text-brown-600">{{ item.quantity }} x {{ formatPrice(item.price) }}</p>
+                </div>
+                <p class="font-semibold">{{ formatPrice(item.price * item.quantity) }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 border-t border-cream-200 pt-4 space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-brown-600">Subtotal:</span> <span>{{ formatPrice(order.subtotal) }}</span></div>
+            <div class="flex justify-between"><span class="text-brown-600">Ongkos Kirim:</span> <span>{{ formatPrice(order.shipping) }}</span></div>
+            <div class="flex justify-between font-bold text-lg"><span class="text-brown-800">Total:</span> <span class="text-orange-600">{{ formatPrice(order.total) }}</span></div>
+          </div>
+        </div>
+
+        <div class="text-center mt-12">
+          <RouterLink to="/" class="btn-secondary inline-flex items-center">
+            <Home class="w-5 h-5 mr-2" />
+            Kembali ke Beranda
+          </RouterLink>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

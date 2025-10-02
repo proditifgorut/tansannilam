@@ -1,0 +1,83 @@
+<script setup lang="ts">
+import { provide, ref } from 'vue'
+import Header from './components/Header.vue'
+import Footer from './components/Footer.vue'
+import Cart from './components/Cart.vue'
+
+export interface CartItem {
+  id: string
+  name: string
+  price: number
+  size: string
+  quantity: number
+  image: string
+}
+
+const cartItems = ref<CartItem[]>([])
+const isCartOpen = ref(false)
+
+const addToCart = (item: Omit<CartItem, 'quantity'>) => {
+  const existingItem = cartItems.value.find(
+    cartItem => cartItem.id === item.id && cartItem.size === item.size
+  )
+
+  if (existingItem) {
+    existingItem.quantity += 1
+  } else {
+    cartItems.value.push({ ...item, quantity: 1 })
+  }
+  
+  isCartOpen.value = true
+}
+
+const removeFromCart = (id: string, size: string) => {
+  const index = cartItems.value.findIndex(
+    item => item.id === id && item.size === size
+  )
+  if (index > -1) {
+    cartItems.value.splice(index, 1)
+  }
+}
+
+const updateQuantity = (id: string, size: string, quantity: number) => {
+  const item = cartItems.value.find(
+    cartItem => cartItem.id === id && cartItem.size === size
+  )
+  if (item) {
+    if (quantity <= 0) {
+      removeFromCart(id, size)
+    } else {
+      item.quantity = quantity
+    }
+  }
+}
+
+const clearCart = () => {
+  cartItems.value = []
+}
+
+const toggleCart = () => {
+  isCartOpen.value = !isCartOpen.value
+}
+
+provide('cart', {
+  items: cartItems,
+  addToCart,
+  removeFromCart,
+  updateQuantity,
+  clearCart,
+  isOpen: isCartOpen,
+  toggle: toggleCart
+})
+</script>
+
+<template>
+  <div class="min-h-screen bg-cream-50">
+    <Header />
+    <main>
+      <router-view />
+    </main>
+    <Footer />
+    <Cart />
+  </div>
+</template>

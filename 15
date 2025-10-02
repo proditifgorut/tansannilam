@@ -1,0 +1,100 @@
+<script setup lang="ts">
+import { ref, inject, computed } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
+import { Menu, X, ShoppingCart } from 'lucide-vue-next'
+
+const route = useRoute()
+const isMenuOpen = ref(false)
+
+const cart = inject('cart') as any
+const cartItemCount = computed(() => 
+  cart.items.value.reduce((total: number, item: any) => total + item.quantity, 0)
+)
+
+const navigation = [
+  { name: 'Beranda', href: '/' },
+  { name: 'Toko', href: '/shop' },
+  { name: 'Tentang Kami', href: '/about' },
+  { name: 'Panduan Penggunaan', href: '/usage' },
+  { name: 'Kontak', href: '/contact' },
+]
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value
+}
+</script>
+
+<template>
+  <header class="bg-white shadow-lg sticky top-0 z-50">
+    <nav class="container-max section-padding py-4">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <RouterLink to="/" class="flex items-center space-x-3">
+          <div class="w-12 h-12 bg-gradient-to-br from-darkGreen-500 to-darkGreen-600 rounded-xl flex items-center justify-center">
+            <span class="text-white font-bold text-lg">TN</span>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-brown-700">Tansan Nilam</h1>
+            <p class="text-sm text-brown-500">Nilam Premium</p>
+          </div>
+        </RouterLink>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center space-x-8">
+          <RouterLink
+            v-for="item in navigation"
+            :key="item.name"
+            :to="item.href"
+            class="text-brown-700 hover:text-orange-500 font-medium transition-colors duration-200"
+            :class="{ 'text-orange-500 font-semibold': route.path === item.href }"
+          >
+            {{ item.name }}
+          </RouterLink>
+        </div>
+
+        <!-- Cart & Mobile Menu Button -->
+        <div class="flex items-center space-x-4">
+          <button
+            @click="cart.toggle"
+            class="relative p-2 text-brown-700 hover:text-orange-500 transition-colors duration-200"
+          >
+            <ShoppingCart class="w-6 h-6" />
+            <span
+              v-if="cartItemCount > 0"
+              class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+            >
+              {{ cartItemCount }}
+            </span>
+          </button>
+
+          <button
+            @click="toggleMenu"
+            class="md:hidden p-2 text-brown-700 hover:text-orange-500 transition-colors duration-200"
+          >
+            <Menu v-if="!isMenuOpen" class="w-6 h-6" />
+            <X v-else class="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Navigation -->
+      <div
+        v-show="isMenuOpen"
+        class="md:hidden mt-4 py-4 border-t border-cream-200"
+      >
+        <div class="flex flex-col space-y-4">
+          <RouterLink
+            v-for="item in navigation"
+            :key="item.name"
+            :to="item.href"
+            @click="isMenuOpen = false"
+            class="text-brown-700 hover:text-orange-500 font-medium transition-colors duration-200 py-2"
+            :class="{ 'text-orange-500 font-semibold': route.path === item.href }"
+          >
+            {{ item.name }}
+          </RouterLink>
+        </div>
+      </div>
+    </nav>
+  </header>
+</template>

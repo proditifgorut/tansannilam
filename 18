@@ -1,0 +1,219 @@
+<script setup lang="ts">
+import { inject } from 'vue'
+import { RouterLink } from 'vue-router'
+import { Star, ArrowRight } from 'lucide-vue-next'
+
+const cart = inject('cart') as any
+
+const products = [
+  {
+    id: 'patchouli-50g',
+    name: 'Tansan Nilam Premium',
+    size: '50g',
+    price: 12000,
+    originalPrice: 12000,
+    discount: '0%',
+    image: 'https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/300x300/875f23/ffffff?text=50g+Pack',
+  },
+  {
+    id: 'patchouli-100g',
+    name: 'Tansan Nilam Premium',
+    size: '100g',
+    price: 20000,
+    originalPrice: 24000,
+    discount: '17%',
+    image: 'https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/300x300/875f23/ffffff?text=100g+Pack',
+    popular: true
+  },
+  {
+    id: 'patchouli-250g',
+    name: 'Tansan Nilam Premium',
+    size: '250g',
+    price: 35000,
+    originalPrice: 48000,
+    discount: '27%',
+    image: 'https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/300x300/875f23/ffffff?text=250g+Pack'
+  },
+  {
+    id: 'patchouli-500g',
+    name: 'Tansan Nilam Premium',
+    size: '500g',
+    price: 55000,
+    originalPrice: 110000,
+    discount: '50%',
+    image: 'https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/300x300/875f23/ffffff?text=500g+Pack'
+  },
+  {
+    id: 'patchouli-1kg',
+    name: 'Tansan Nilam Premium',
+    size: '1kg',
+    price: 90000,
+    originalPrice: 240000,
+    discount: '63%',
+    image: 'https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/300x300/875f23/ffffff?text=1kg+Pack',
+    bestseller: true
+  }
+]
+
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0
+  }).format(price)
+}
+
+const addToCart = (product: any) => {
+  cart.addToCart({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    size: product.size,
+    image: product.image
+  })
+}
+</script>
+
+<template>
+  <div>
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-cream-100 to-cream-200 section-padding min-h-[90vh] flex items-center">
+      <div class="container-max">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="space-y-8 text-center lg:text-left">
+            <div class="space-y-4">
+              <h1 class="text-4xl md:text-6xl font-bold text-brown-800 leading-tight">
+                Daun Nilam Kering
+                <span class="text-orange-500">Kualitas Premium</span>
+              </h1>
+              <p class="text-xl text-brown-600 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                Aroma kuat, kering sempurna. Siap untuk penyulingan, aromaterapi, dan kebutuhan usaha Anda.
+              </p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <RouterLink to="/shop" class="btn-primary inline-flex items-center justify-center">
+                Belanja Sekarang
+                <ArrowRight class="ml-2 w-5 h-5" />
+              </RouterLink>
+              <RouterLink to="/about" class="btn-secondary inline-flex items-center justify-center">
+                Pelajari Lebih Lanjut
+              </RouterLink>
+            </div>
+          </div>
+
+          <!-- New Image Display based on user-provided image -->
+          <div class="relative flex items-center justify-center p-8 lg:p-0">
+              <div class="w-1/3 sm:w-1/4 lg:w-1/3 z-10 -mr-4 lg:-mr-8 transform hover:scale-105 hover:rotate-0 transition-transform duration-300 -rotate-3">
+                  <div class="bg-brown-500 aspect-[3/4] rounded-2xl shadow-2xl flex items-center justify-center p-2">
+                      <img src="https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/300x400/875f23/ffffff?text=50g" alt="50g Pack" class="object-contain rounded-lg" />
+                  </div>
+              </div>
+              <div class="w-2/3 sm:w-1/2 lg:w-2/3 relative">
+                  <div class="absolute w-2/3 sm:w-3/4 right-0 top-1/2 transform -translate-y-1/2 rotate-6 transition-transform duration-300 hover:rotate-2">
+                      <div class="bg-brown-500 aspect-[3/4] rounded-2xl shadow-2xl flex items-center justify-center p-2">
+                         <img src="https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/300x400/875f23/ffffff?text=500g" alt="500g Pack" class="object-contain rounded-lg" />
+                      </div>
+                  </div>
+                  <div class="relative w-2/3 sm:w-3/4 z-10 transform hover:scale-105 hover:-rotate-0 transition-transform duration-300 -rotate-2">
+                      <div class="bg-brown-500 aspect-[3/4] rounded-2xl shadow-2xl flex items-center justify-center p-2">
+                          <img src="https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/300x400/875f23/ffffff?text=1kg" alt="1kg Pack" class="object-contain rounded-lg" />
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- All Products -->
+    <section class="section-padding bg-cream-50">
+      <div class="container-max">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold text-brown-800 mb-4">
+            Pilihan Produk Kami
+          </h2>
+          <p class="text-xl text-brown-600">
+            Tersedia dalam berbagai ukuran untuk memenuhi setiap kebutuhan Anda.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+          <div
+            v-for="product in products"
+            :key="product.id"
+            class="card group hover:scale-105 transition-all duration-300"
+          >
+            <div class="relative">
+              <img
+                :src="product.image"
+                :alt="product.name"
+                class="w-full h-64 object-cover"
+              />
+              <div class="absolute top-4 left-4 flex flex-col gap-2">
+                <span
+                  v-if="product.popular"
+                  class="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold"
+                >
+                  Populer
+                </span>
+                <span
+                  v-if="product.bestseller"
+                  class="bg-darkGreen-500 text-white px-3 py-1 rounded-full text-sm font-semibold"
+                >
+                  Terlaris
+                </span>
+              </div>
+              <div v-if="product.discount !== '0%'" class="absolute top-4 right-4">
+                <span class="bg-red-500 text-white px-2 py-1 rounded-full text-sm font-bold">
+                  -{{ product.discount }}
+                </span>
+              </div>
+            </div>
+
+            <div class="p-6 flex flex-col flex-grow">
+              <h3 class="text-xl font-semibold text-brown-800 mb-2">{{ product.name }}</h3>
+              <p class="text-brown-600 mb-4">Ukuran: {{ product.size }}</p>
+              
+              <div class="flex items-center justify-between mb-6">
+                <div>
+                  <span class="text-2xl font-bold text-orange-600">{{ formatPrice(product.price) }}</span>
+                  <span v-if="product.discount !== '0%'" class="text-sm text-gray-500 line-through ml-2">{{ formatPrice(product.originalPrice) }}</span>
+                </div>
+              </div>
+
+              <button
+                @click="addToCart(product)"
+                class="w-full btn-primary group-hover:shadow-xl mt-auto"
+              >
+                Tambah ke Keranjang
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-16">
+          <RouterLink to="/shop" class="btn-secondary inline-flex items-center">
+            Lihat Detail Produk
+            <ArrowRight class="ml-2 w-5 h-5" />
+          </RouterLink>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section-padding bg-gradient-to-br from-brown-700 to-brown-800">
+      <div class="container-max text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-cream-100 mb-6">
+          Siap Memulai Perjalanan Aromaterapi Anda?
+        </h2>
+        <p class="text-xl text-cream-300 mb-8 max-w-2xl mx-auto">
+          Bergabunglah dengan ribuan pelanggan puas yang mempercayai Tansan Nilam untuk kebutuhan nilam premium mereka.
+        </p>
+        <RouterLink to="/shop" class="btn-primary text-lg px-8 py-4">
+          Pilih Ukuran Anda Sekarang
+        </RouterLink>
+      </div>
+    </section>
+  </div>
+</template>

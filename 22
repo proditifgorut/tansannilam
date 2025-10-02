@@ -1,0 +1,296 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { MapPin, Phone, Mail, Clock, Send, MessageCircle, Package as PackageIcon } from 'lucide-vue-next'
+
+const form = ref({
+  name: '',
+  email: '',
+  phone: '',
+  subject: '',
+  message: '',
+  inquiryType: 'general'
+})
+
+const isSubmitting = ref(false)
+
+const submitForm = async () => {
+  isSubmitting.value = true
+  // Simulate form submission
+  await new Promise(resolve => setTimeout(resolve, 1500))
+  
+  // Reset form
+  form.value = {
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+    inquiryType: 'general'
+  }
+  
+  isSubmitting.value = false
+  alert('Terima kasih atas pesan Anda! Kami akan segera menghubungi Anda.')
+}
+
+const inquiryTypes = [
+  { value: 'general', label: 'Pertanyaan Umum' },
+  { value: 'wholesale', label: 'Pesanan Grosir' },
+  { value: 'product', label: 'Informasi Produk' },
+  { value: 'shipping', label: 'Pengiriman' },
+  { value: 'support', label: 'Dukungan Pelanggan' }
+]
+
+const contactInfo = [
+  {
+    icon: MapPin,
+    title: 'Alamat',
+    content: 'Gorontalo, Indonesia',
+    subtitle: 'Melayani pengiriman nasional'
+  },
+  {
+    icon: Phone,
+    title: 'Telepon',
+    content: '083119226089',
+    subtitle: 'WhatsApp tersedia'
+  },
+  {
+    icon: Mail,
+    title: 'Email',
+    content: 'infonilam@unisgu.ac.id',
+    subtitle: 'Respon dalam 24 jam'
+  },
+  {
+    icon: Clock,
+    title: 'Jam Kerja',
+    content: 'Senin - Sabtu: 08:00 - 18:00',
+    subtitle: 'Minggu: Hanya darurat'
+  }
+]
+</script>
+
+<template>
+  <div class="bg-cream-50">
+    <!-- Hero Section -->
+    <section class="section-padding bg-gradient-to-br from-brown-700 to-brown-800 text-cream-100">
+      <div class="container-max text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6">Hubungi Kami</h1>
+        <p class="text-xl text-cream-300 max-w-3xl mx-auto">
+          Hubungi kami untuk pertanyaan grosir, informasi produk, atau pertanyaan apa pun tentang daun nilam premium kami.
+        </p>
+      </div>
+    </section>
+
+    <!-- Contact Info Cards -->
+    <section class="section-padding bg-white">
+      <div class="container-max">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <div
+            v-for="info in contactInfo"
+            :key="info.title"
+            class="text-center p-6 bg-cream-50 rounded-2xl hover:shadow-lg transition-all duration-300"
+          >
+            <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <component :is="info.icon" class="w-8 h-8 text-white" />
+            </div>
+            <h3 class="text-lg font-semibold text-brown-800 mb-2">{{ info.title }}</h3>
+            <p class="text-brown-700 font-medium mb-1">{{ info.content }}</p>
+            <p class="text-brown-500 text-sm">{{ info.subtitle }}</p>
+          </div>
+        </div>
+
+        <!-- Contact Form & Info -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <!-- Contact Form -->
+          <div class="bg-cream-50 rounded-2xl p-8 shadow-lg">
+            <h2 class="text-2xl font-bold text-brown-800 mb-6 flex items-center">
+              <Send class="w-6 h-6 mr-3" />
+              Kirim Pesan kepada Kami
+            </h2>
+
+            <form @submit.prevent="submitForm" class="space-y-6">
+              <!-- Inquiry Type -->
+              <div>
+                <label class="block text-brown-700 font-semibold mb-2">Jenis Pertanyaan</label>
+                <select
+                  v-model="form.inquiryType"
+                  class="w-full px-4 py-3 border border-cream-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200"
+                >
+                  <option v-for="type in inquiryTypes" :key="type.value" :value="type.value">
+                    {{ type.label }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Name -->
+              <div>
+                <label class="block text-brown-700 font-semibold mb-2">Nama Lengkap *</label>
+                <input
+                  v-model="form.name"
+                  type="text"
+                  required
+                  class="w-full px-4 py-3 border border-cream-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200"
+                  placeholder="Masukkan nama lengkap Anda"
+                />
+              </div>
+
+              <!-- Email & Phone -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-brown-700 font-semibold mb-2">Alamat Email *</label>
+                  <input
+                    v-model="form.email"
+                    type="email"
+                    required
+                    class="w-full px-4 py-3 border border-cream-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200"
+                    placeholder="email@anda.com"
+                  />
+                </div>
+                <div>
+                  <label class="block text-brown-700 font-semibold mb-2">Nomor Telepon</label>
+                  <input
+                    v-model="form.phone"
+                    type="tel"
+                    class="w-full px-4 py-3 border border-cream-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200"
+                    placeholder="+62 xxx-xxxx-xxxx"
+                  />
+                </div>
+              </div>
+
+              <!-- Subject -->
+              <div>
+                <label class="block text-brown-700 font-semibold mb-2">Subjek *</label>
+                <input
+                  v-model="form.subject"
+                  type="text"
+                  required
+                  class="w-full px-4 py-3 border border-cream-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200"
+                  placeholder="Tentang apa pesan ini?"
+                />
+              </div>
+
+              <!-- Message -->
+              <div>
+                <label class="block text-brown-700 font-semibold mb-2">Pesan *</label>
+                <textarea
+                  v-model="form.message"
+                  required
+                  rows="5"
+                  class="w-full px-4 py-3 border border-cream-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-200 resize-none"
+                  placeholder="Berikan detail mengenai pertanyaan Anda..."
+                ></textarea>
+              </div>
+
+              <!-- Submit Button -->
+              <button
+                type="submit"
+                :disabled="isSubmitting"
+                class="w-full btn-primary flex items-center justify-center"
+                :class="{ 'opacity-75 cursor-not-allowed': isSubmitting }"
+              >
+                <span v-if="!isSubmitting" class="flex items-center">
+                  <Send class="w-5 h-5 mr-2" />
+                  Kirim Pesan
+                </span>
+                <span v-else class="flex items-center">
+                  <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  Mengirim...
+                </span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Additional Info -->
+          <div class="space-y-8">
+            <!-- Wholesale Info -->
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+              <h3 class="text-xl font-bold text-brown-800 mb-4 flex items-center">
+                <PackageIcon class="w-6 h-6 mr-3" />
+                Pertanyaan Grosir
+              </h3>
+              <p class="text-brown-600 mb-4">
+                Mencari pesanan dalam jumlah besar? Kami menawarkan harga khusus untuk pelanggan grosir dan bisnis.
+              </p>
+              <ul class="space-y-2 text-brown-600">
+                <li class="flex items-center">
+                  <div class="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
+                  Pesanan minimum: 5kg untuk harga grosir
+                </li>
+                <li class="flex items-center">
+                  <div class="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
+                  Kemasan kustom tersedia
+                </li>
+                <li class="flex items-center">
+                  <div class="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
+                  Syarat pembayaran fleksibel untuk pelanggan tetap
+                </li>
+                <li class="flex items-center">
+                  <div class="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
+                  Sertifikat kualitas tersedia berdasarkan permintaan
+                </li>
+              </ul>
+            </div>
+
+            <!-- WhatsApp Contact -->
+            <div class="bg-gradient-to-br from-darkGreen-50 to-darkGreen-100 rounded-2xl p-8">
+              <h3 class="text-xl font-bold text-brown-800 mb-4 flex items-center">
+                <MessageCircle class="w-6 h-6 mr-3" />
+                Kontak Cepat WhatsApp
+              </h3>
+              <p class="text-brown-600 mb-6">
+                Butuh bantuan segera? Hubungi kami langsung di WhatsApp untuk respon lebih cepat.
+              </p>
+              <a
+                href="https://wa.me/6283119226089"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                <MessageCircle class="w-5 h-5 mr-2" />
+                Chat di WhatsApp
+              </a>
+            </div>
+
+            <!-- FAQ Link -->
+            <div class="bg-white rounded-2xl p-8 shadow-lg">
+              <h3 class="text-xl font-bold text-brown-800 mb-4">Pertanyaan yang Sering Diajukan (FAQ)</h3>
+              <p class="text-brown-600 mb-4">
+                Sebelum menghubungi kami, Anda mungkin menemukan jawaban di bagian FAQ kami.
+              </p>
+              <div class="space-y-3">
+                <details class="group">
+                  <summary class="flex items-center justify-between cursor-pointer text-brown-700 font-medium py-2">
+                    Berapa lama masa simpan daun nilam kering?
+                    <span class="transform group-open:rotate-180 transition-transform duration-200">▼</span>
+                  </summary>
+                  <p class="text-brown-600 mt-2 pl-4">
+                    Jika disimpan dengan benar dalam wadah kedap udara, daun nilam kering kami mempertahankan kualitas dan aromanya hingga 2 tahun.
+                  </p>
+                </details>
+                
+                <details class="group">
+                  <summary class="flex items-center justify-between cursor-pointer text-brown-700 font-medium py-2">
+                    Apakah Anda mengirim ke seluruh Indonesia?
+                    <span class="transform group-open:rotate-180 transition-transform duration-200">▼</span>
+                  </summary>
+                  <p class="text-brown-600 mt-2 pl-4">
+                    Ya, kami mengirim ke semua provinsi di Indonesia menggunakan jasa kurir terpercaya seperti JNE, SiCepat, dan J&T Express.
+                  </p>
+                </details>
+                
+                <details class="group">
+                  <summary class="flex items-center justify-between cursor-pointer text-brown-700 font-medium py-2">
+                    Bisakah saya mendapatkan sampel sebelum pesanan grosir?
+                    <span class="transform group-open:rotate-180 transition-transform duration-200">▼</span>
+                  </summary>
+                  <p class="text-brown-600 mt-2 pl-4">
+                    Ya, kami menawarkan paket sampel 50g untuk calon pelanggan grosir. Hubungi kami untuk harga dan pengiriman sampel.
+                  </p>
+                </details>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>

@@ -1,0 +1,276 @@
+<script setup lang="ts">
+import { ref, inject, computed } from 'vue'
+import { Star, Minus, Plus } from 'lucide-vue-next'
+
+const cart = inject('cart') as any
+
+const selectedSize = ref('100g')
+const quantity = ref(1)
+
+const productSizes = [
+  {
+    size: '50g',
+    price: 12000,
+    originalPrice: 12000,
+    discount: 0,
+    description: 'Sempurna untuk coba-coba atau kebutuhan aromaterapi kecil.'
+  },
+  {
+    size: '100g',
+    price: 20000,
+    originalPrice: 24000,
+    discount: 17,
+    description: 'Cocok untuk penggunaan pribadi dan proyek kecil.',
+    popular: true
+  },
+  {
+    size: '250g',
+    price: 35000,
+    originalPrice: 48000,
+    discount: 27,
+    description: 'Ideal untuk usaha kecil dan pengguna rutin.'
+  },
+  {
+    size: '500g',
+    price: 55000,
+    originalPrice: 110000,
+    discount: 50,
+    description: 'Sempurna untuk produksi skala menengah.'
+  },
+  {
+    size: '1kg',
+    price: 90000,
+    originalPrice: 240000,
+    discount: 63,
+    description: 'Harga terbaik untuk penyulingan dan reseller.',
+    bestseller: true
+  }
+]
+
+const selectedProduct = computed(() => 
+  productSizes.find(p => p.size === selectedSize.value)
+)
+
+const totalPrice = computed(() => 
+  (selectedProduct.value?.price || 0) * quantity.value
+)
+
+const images = [
+  'https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/600x600/875f23/ffffff?text=Daun+Nilam',
+  'https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/600x600/234b23/ffffff?text=Kemasan+Depan',
+  'https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/600x600/875f23/ffffff?text=Kemasan+Belakang',
+  'https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/600x600/234b23/ffffff?text=Close+Up'
+]
+
+const selectedImage = ref(images[0])
+
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0
+  }).format(price)
+}
+
+const addToCartHandler = () => {
+  if (selectedProduct.value) {
+    for (let i = 0; i < quantity.value; i++) {
+      cart.addToCart({
+        id: `patchouli-${selectedSize.value}`,
+        name: 'Tansan Nilam Premium',
+        price: selectedProduct.value.price,
+        size: selectedSize.value,
+        image: `https://img-wrapper.vercel.app/image?url=https://img-wrapper.vercel.app/image?url=https://placehold.co/300x300/875f23/ffffff?text=${selectedSize.value}+Pack`
+      })
+    }
+    quantity.value = 1
+  }
+}
+</script>
+
+<template>
+  <div class="section-padding bg-cream-50 min-h-screen">
+    <div class="container-max">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- Product Images -->
+        <div class="space-y-4">
+          <div class="aspect-square bg-white rounded-2xl shadow-lg overflow-hidden">
+            <img
+              :src="selectedImage"
+              alt="Tansan Nilam Premium"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="grid grid-cols-4 gap-4">
+            <button
+              v-for="image in images"
+              :key="image"
+              @click="selectedImage = image"
+              :class="[
+                'aspect-square rounded-xl overflow-hidden border-2 transition-all duration-200',
+                selectedImage === image 
+                  ? 'border-orange-500 ring-2 ring-orange-200' 
+                  : 'border-cream-300 hover:border-orange-300'
+              ]"
+            >
+              <img :src="image" alt="Tampilan produk" class="w-full h-full object-cover" />
+            </button>
+          </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="space-y-8">
+          <div>
+            <h1 class="text-3xl md:text-4xl font-bold text-brown-800 mb-4">
+              Tansan Nilam - Daun Nilam Kering Premium
+            </h1>
+            <div class="flex items-center space-x-4 mb-6">
+              <div class="flex items-center">
+                <Star v-for="i in 5" :key="i" class="w-5 h-5 text-yellow-400 fill-current" />
+                <span class="ml-2 text-brown-600">(127 ulasan)</span>
+              </div>
+              <span class="text-darkGreen-600 font-semibold">Stok Tersedia</span>
+            </div>
+          </div>
+
+          <!-- Size Selection -->
+          <div>
+            <h3 class="text-xl font-semibold text-brown-800 mb-4">Pilih Ukuran:</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button
+                v-for="product in productSizes"
+                :key="product.size"
+                @click="selectedSize = product.size"
+                :class="[
+                  'p-4 border-2 rounded-xl text-left transition-all duration-200 relative',
+                  selectedSize === product.size
+                    ? 'border-orange-500 bg-orange-50'
+                    : 'border-cream-300 hover:border-orange-300 bg-white'
+                ]"
+              >
+                <div class="flex justify-between items-start mb-2">
+                  <span class="font-semibold text-lg text-brown-800">{{ product.size }}</span>
+                  <div class="flex flex-col items-end">
+                    <span
+                      v-if="product.popular"
+                      class="text-xs bg-orange-500 text-white px-2 py-1 rounded-full mb-1"
+                    >
+                      Populer
+                    </span>
+                    <span
+                      v-if="product.bestseller"
+                      class="text-xs bg-darkGreen-500 text-white px-2 py-1 rounded-full mb-1"
+                    >
+                      Terlaris
+                    </span>
+                    <span
+                      v-if="product.discount > 0"
+                      class="text-xs bg-red-500 text-white px-2 py-1 rounded-full"
+                    >
+                      -{{ product.discount }}%
+                    </span>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2 mb-2">
+                  <span class="text-xl font-bold text-orange-600">{{ formatPrice(product.price) }}</span>
+                  <span
+                    v-if="product.discount > 0"
+                    class="text-sm text-gray-500 line-through"
+                  >
+                    {{ formatPrice(product.originalPrice) }}
+                  </span>
+                </div>
+                <p class="text-sm text-brown-600">{{ product.description }}</p>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quantity & Price -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <label class="text-lg font-semibold text-brown-800 block mb-2">Kuantitas:</label>
+                <div class="flex items-center space-x-4">
+                  <button
+                    @click="quantity = Math.max(1, quantity - 1)"
+                    class="w-10 h-10 bg-cream-200 hover:bg-cream-300 rounded-lg flex items-center justify-center transition-colors duration-200"
+                  >
+                    <Minus class="w-5 h-5" />
+                  </button>
+                  <span class="text-xl font-semibold text-brown-800 min-w-[3rem] text-center">{{ quantity }}</span>
+                  <button
+                    @click="quantity++"
+                    class="w-10 h-10 bg-cream-200 hover:bg-cream-300 rounded-lg flex items-center justify-center transition-colors duration-200"
+                  >
+                    <Plus class="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              <div class="text-right">
+                <p class="text-sm text-brown-600">Total Harga:</p>
+                <p class="text-3xl font-bold text-orange-600">{{ formatPrice(totalPrice) }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add to Cart -->
+          <button
+            @click="addToCartHandler"
+            class="w-full btn-primary text-xl py-4 shadow-xl hover:shadow-2xl"
+          >
+            Tambah ke Keranjang - {{ formatPrice(totalPrice) }}
+          </button>
+
+          <!-- Product Details -->
+          <div class="bg-white rounded-xl p-6 space-y-4">
+            <h3 class="text-xl font-semibold text-brown-800">Detail Produk</h3>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="font-semibold text-brown-700">Jenis:</span>
+                <span class="text-brown-600 ml-2">Daun Nilam Kering Rajangan</span>
+              </div>
+              <div>
+                <span class="font-semibold text-brown-700">Tingkat Kekeringan:</span>
+                <span class="text-brown-600 ml-2">95-98%</span>
+              </div>
+              <div>
+                <span class="font-semibold text-brown-700">Kadar Minyak:</span>
+                <span class="text-brown-600 ml-2">2.5% - 3%</span>
+              </div>
+              <div>
+                <span class="font-semibold text-brown-700">Asal:</span>
+                <span class="text-brown-600 ml-2">Aceh, Indonesia</span>
+              </div>
+              <div class="col-span-2">
+                <span class="font-semibold text-brown-700">Kemasan:</span>
+                <span class="text-brown-600 ml-2">Aluminium Foil Pouch dengan Ziplock</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="bg-white rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-brown-800 mb-4">Deskripsi</h3>
+            <div class="space-y-4 text-brown-600">
+              <p>
+                Daun nilam kering premium kami dipilih secara cermat dari perkebunan terbaik
+                di Aceh, Indonesia. Setiap helai daun melalui proses pengeringan yang teliti untuk menjaga
+                aroma alami dan kandungan minyak atsirinya.
+              </p>
+              <p>
+                Sempurna untuk penyulingan minyak atsiri, aromaterapi, potpourri, pembuatan sabun,
+                dan aplikasi herbal lainnya. Daun kami mempertahankan aroma nilam yang kuat dan khas
+                yang menjamin hasil maksimal dalam proyek Anda.
+              </p>
+              <p>
+                Semua paket disegel dalam kemasan aluminium foil profesional dengan penutup ziplock
+                untuk menjaga kesegaran dan kualitas selama penyimpanan dan pengiriman.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
